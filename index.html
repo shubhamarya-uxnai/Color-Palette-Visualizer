@@ -43,7 +43,7 @@
           <div class="empty-card">
             <div class="mark"></div>
             <h2>No color palette in the system</h2>
-            <p>Start with a PDF or CSV. The local Python engine extracts color codes, then you can clean up names, groups, and values before drawing the color-space diagram.</p>
+            <p>Start with a PDF or CSV. Color codes are extracted locally in your browser, then you can clean up names, groups, and values before drawing the color-space diagram.</p>
             <div class="btnrow"><button class="ds-button" data-size="large" data-type="primary" data-fill="on" data-icon="upload-simple" id="emptyUploadBtn">Upload PDF or CSV</button></div>
           </div>
         </div>
@@ -60,10 +60,10 @@
 
 <dialog class="modal" id="paletteModal">
   <form method="dialog">
-    <div class="modal-head"><div><h2>Upload and edit palette</h2><p>Everything runs locally. CSV is parsed directly; PDF uses Python extraction and falls back to scanning embedded text for hex and RGB values.</p></div><div class="spacer"></div><div class="modal-top-actions"><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="upload-simple" id="modalUploadBtn" type="button">Upload file</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="plus" id="addColorBtn" type="button">Add color</button><button class="ds-button" data-size="small" data-type="primary" data-fill="on" data-icon="sparkle" id="applyBtn" type="button" disabled>Visualise</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="x" type="button" id="closeModalBtn">Close</button></div></div>
+    <div class="modal-head"><div><h2>Upload and edit palette</h2><p>Everything runs in your browser. CSV is parsed directly and PDF text is extracted locally with PDF.js.</p></div><div class="spacer"></div><div class="modal-top-actions"><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="upload-simple" id="modalUploadBtn" type="button">Upload file</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="plus" id="addColorBtn" type="button">Add color</button><button class="ds-button" data-size="small" data-type="primary" data-fill="on" data-icon="sparkle" id="applyBtn" type="button" disabled>Visualise</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="x" type="button" id="closeModalBtn">Close</button></div></div>
     <div class="modal-body">
       <label class="drop" id="dropZone"><input id="fileInput" type="file" accept=".csv,.pdf,text/csv,application/pdf"><span class="drop-mark" data-icon-host="upload-simple"></span><span><strong>Upload PDF or CSV</strong><span class="hint">Drop a file here or click to choose. Expected fields can be hex, color, colour, code, name, group, brand, palette, or layer.</span></span></label>
-      <div class="loading" id="loading"><span class="spinner"></span><div><strong>Creating color palette</strong><div class="hint">The Python engine is extracting values and preparing editable swatches.</div></div></div>
+      <div class="loading" id="loading"><span class="spinner"></span><div><strong>Creating color palette</strong><div class="hint">Extracting values in your browser and preparing editable swatches.</div></div></div>
       <div class="editor" id="editor"></div>
     </div>
   </form>
@@ -90,6 +90,12 @@ function rgb(hex){const v=normalizeHex(hex)||"#000000";return{r:parseInt(v.slice
 function hslFromHex(hex){let{r,g,b}=rgb(hex);r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b);let h=0,s=0,l=(max+min)/2;if(max!==min){const d=max-min;s=l>.5?d/(2-max-min):d/(max+min);if(max===r)h=(g-b)/d+(g<b?6:0);else if(max===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60}return{h:Math.round(h),s:Math.round(s*100),l:Math.round(l*100)}}
 function tone(hex){const{r,g,b}=rgb(hex);const f=v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4};const y=.2126*f(r)+.7152*f(g)+.0722*f(b);return Math.round(y<=216/24389?y*(24389/27):116*Math.cbrt(y)-16)}
 function colorMeta(hex){const c=rgb(hex),h=hslFromHex(hex);return{rgb:`rgb(${c.r}, ${c.g}, ${c.b})`,hsl:`hsl(${h.h} ${h.s}% ${h.l}%)`,hct:`H ${h.h} · C ${h.s} · T ${tone(hex)}`}}
+function sourceGroup(filename){const stem=filename.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim();return stem?stem.replace(/\b\w/g,c=>c.toUpperCase()):"Uploaded Palette"}
+function csvCells(line){const cells=[];let cell="",quoted=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'&&line[i+1]==='"'){cell+='"';i++;continue}if(ch==='"'){quoted=!quoted;continue}if(ch===','&&!quoted){cells.push(cell.trim());cell="";continue}cell+=ch}cells.push(cell.trim());return cells}
+function csvRows(text,filename){const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(Boolean);if(!lines.length)return[];const headers=csvCells(lines[0]).map(v=>v.toLowerCase());const find=(keys,part)=>headers.findIndex(h=>keys.includes(h)||h.includes(part));const hexIndex=find(["hex","color","colour","code","value"],"hex");const nameIndex=find(["name","color name","colour name","token","role"],"name");const groupIndex=find(["group","brand","palette","layer","collection"],"");const fallback=sourceGroup(filename);const rows=[];for(const line of lines.slice(1)){const cells=csvCells(line);let value=hexIndex>=0?cells[hexIndex]:"";if(!value)value=cells.join(" ");const hexMatch=value.match(/#[0-9a-fA-F]{3,6}\b/);const rgbMatch=value.match(/rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/i);let hex=hexMatch?normalizeHex(hexMatch[0]):null;if(!hex&&rgbMatch){const n=rgbMatch.slice(1,4).map(Number);if(n.every(v=>v<=255))hex="#"+n.map(v=>v.toString(16).padStart(2,"0")).join("").toUpperCase()}if(!hex)continue;rows.push({group:(groupIndex>=0&&cells[groupIndex])||fallback,name:(nameIndex>=0&&cells[nameIndex])||`Color ${String(rows.length+1).padStart(2,"0")} ${hex}`,hex,source:"CSV"})}return rows}
+function textRows(text,filename,source="PDF"){const rows=[],seen=new Set(),group=sourceGroup(filename);for(const match of text.matchAll(/#[0-9a-fA-F]{3,6}\b/g)){const hex=normalizeHex(match[0]);if(!hex||seen.has(hex))continue;seen.add(hex);const before=text.slice(Math.max(0,match.index-72),match.index).split(/\n/).pop().replace(/[^A-Za-z0-9 /_.-]+/g," ").trim().replace(/[-:]$/,'');rows.push({group,name:before||`Color ${String(rows.length+1).padStart(2,"0")} ${hex}`,hex,source})}for(const match of text.matchAll(/rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/gi)){const n=match.slice(1,4).map(Number);if(n.some(v=>v>255))continue;const hex="#"+n.map(v=>v.toString(16).padStart(2,"0")).join("").toUpperCase();if(seen.has(hex))continue;seen.add(hex);rows.push({group,name:`Color ${String(rows.length+1).padStart(2,"0")} ${hex}`,hex,source})}return rows}
+async function pdfRows(file){const pdfjs=await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");pdfjs.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";const pdf=await pdfjs.getDocument({data:await file.arrayBuffer()}).promise;let text="";for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();text+=content.items.map(item=>item.str).join(" ")+"\n"}return textRows(text,file.name)}
+async function browserExtract(file){const lower=file.name.toLowerCase();if(lower.endsWith(".csv"))return csvRows(await file.text(),file.name);if(lower.endsWith(".pdf"))return pdfRows(file);return textRows(await file.text(),file.name,"Text")}
 function key(c){return `${c.group}|${c.name}|${c.hex}`}
 function groups(){return [...new Set(colors.map(c=>c.group||"Uploaded Palette"))]}
 function openModal(){modal.showModal();renderEditor()}
@@ -103,9 +109,9 @@ $("#fileInput").onchange=e=>{if(e.target.files[0])handleFile(e.target.files[0])}
 async function handleFile(file){
   $("#loading").classList.add("on");$("#applyBtn").disabled=true;
   try{
-    const res=await fetch("/api/extract",{method:"POST",headers:{"X-Filename":file.name,"Content-Type":"application/octet-stream"},body:await file.arrayBuffer()});
-    const data=await res.json(); if(!res.ok)throw new Error(data.error||"Upload failed");
-    draft=(data.colors||[]).map((c,i)=>({id:crypto.randomUUID(),group:c.group||"Uploaded Palette",name:c.name||`Color ${i+1}`,hex:normalizeHex(c.hex)||"#000000",layer:"Generated"}));
+    const extracted=await browserExtract(file);
+    draft=extracted.map((c,i)=>({id:crypto.randomUUID(),group:c.group||"Uploaded Palette",name:c.name||`Color ${i+1}`,hex:normalizeHex(c.hex)||"#000000",layer:"Generated"}));
+    if(!draft.length)throw new Error("No hex or RGB colors were found in this file.");
     sourceName=file.name; renderEditor();
   }catch(err){alert(err.message)}
   finally{$("#loading").classList.remove("on");$("#applyBtn").disabled=draft.length===0}
