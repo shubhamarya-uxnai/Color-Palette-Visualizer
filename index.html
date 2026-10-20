@@ -1,54 +1,52 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
-<head>
+<!DOCTYPE html><html lang="en" data-theme="dark"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Color Palette Visualizer V1</title>
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/shubhamarya-uxnai/BA-Design-Sytem@v0.1.2/dist/consumer.css" data-ba-version="0.1.2">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/shubhamarya-uxnai/BA-Design-Sytem@v0.2.0/dist/consumer.css" data-ba-version="0.2.0">
 <link rel="stylesheet" href="type.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Material+Symbols+Rounded&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Material+Symbols+Rounded&amp;display=swap">
 </head>
-<body>
+<body data-ba-component="Page">
 <div class="app">
-  <header>
-    <h1 class="brand"><span class="dot"></span>Palette Visualizer <small>V1.0</small></h1>
+  <header data-ba-component="Topbar">
+    <h1 class="brand" data-ba-component="Display"><span class="dot"></span>Palette Visualizer <small>V1.0</small></h1>
     <div class="spacer"></div>
     <div class="status" id="status">No palette loaded</div>
-    <button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="palette" id="editBtn">Upload / Edit</button>
+    <button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="palette" id="editBtn" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">Upload / Edit</button>
   </header>
   <div class="shell">
-    <aside class="left">
-      <div class="grp"><h3>Color Space</h3><div class="grpbody"><div class="segmented" role="group" aria-label="Color space"><button data-mode="rgb" aria-pressed="true">RGB</button><button data-mode="hsl" aria-pressed="false">HSL</button><button data-mode="hct" aria-pressed="false">HCT</button></div><p class="hint">The diagram keeps the earlier RGB, HSL, and HCT-oriented plotting model.</p></div></div>
+    <aside class="left" data-ba-component="Sidebar">
+      <div class="grp"><h3>Color Space</h3><div class="grpbody"><div class="segmented" role="group" aria-label="Color space"><button data-mode="rgb" aria-pressed="true" data-ba-component="Button" data-ba-variant="filled" data-ba-tone="primary" data-ba-size="small">RGB</button><button data-mode="hsl" aria-pressed="false" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">HSL</button><button data-mode="hct" aria-pressed="false" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">HCT</button></div><p class="hint">The diagram keeps the earlier RGB, HSL, and HCT-oriented plotting model.</p></div></div>
       <div class="grp"><h3>Groups</h3><div class="grpbody" id="groupFilters"><p class="hint">Upload a PDF or CSV to create groups.</p></div></div>
-      <div class="grp"><h3>Layers</h3><div class="grpbody"><label class="check"><input type="checkbox" data-layer="Generated" checked>Generated</label><label class="check"><input type="checkbox" data-layer="Edited" checked>Edited</label></div></div>
+      <div class="grp"><h3>Layers</h3><div class="grpbody"><label class="check"><input type="checkbox" data-layer="Generated" checked="">Generated</label><label class="check"><input type="checkbox" data-layer="Edited" checked="">Edited</label></div></div>
       <div class="grp"><h3>View Angles</h3><div class="grpbody control-grid">
-        <label class="num-row"><span>X tilt</span><input type="range" min="-83" max="83" value="-36" data-angle="x"><input type="text" value="-36" data-angle-number="x"></label>
-        <label class="num-row"><span>Y turn</span><input type="range" min="-180" max="180" value="41" data-angle="y"><input type="text" value="41" data-angle-number="y"></label>
-        <label class="num-row"><span>Z roll</span><input type="range" min="-180" max="180" value="0" data-angle="z"><input type="text" value="0" data-angle-number="z"></label>
-        <div class="btnrow"><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-view="front">Front</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-view="top">Top</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-view="side">Side</button></div>
+        <label class="num-row"><span>X tilt</span><input type="range" min="-83" max="83" value="-36" data-angle="x"><input type="text" value="-36" data-angle-number="x" data-ba-component="InputField"></label>
+        <label class="num-row"><span>Y turn</span><input type="range" min="-180" max="180" value="41" data-angle="y"><input type="text" value="41" data-angle-number="y" data-ba-component="InputField"></label>
+        <label class="num-row"><span>Z roll</span><input type="range" min="-180" max="180" value="0" data-angle="z"><input type="text" value="0" data-angle-number="z" data-ba-component="InputField"></label>
+        <div class="btnrow"><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-view="front" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">Front</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-view="top" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">Top</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-view="side" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">Side</button></div>
       </div></div>
       <div class="grp"><h3>Visible Colors</h3><div class="grpbody"><div class="palette-list" id="paletteList"></div></div></div>
     </aside>
     <main class="stage">
       <div class="stage-head">
         <div><h2 id="modeTitle">RGB Cube</h2><p id="modeCopy">RGB plots red, green, and blue as x/y/z coordinates.</p></div>
-        <button class="ds-button" data-size="large" data-type="primary" data-fill="on" data-icon="sparkle" id="visualiseBtn" disabled>Visualise these colors</button>
+        <button class="ds-button" data-size="large" data-type="primary" data-fill="on" data-icon="sparkle" id="visualiseBtn" disabled="" data-ba-component="Button" data-ba-variant="filled" data-ba-tone="primary" data-ba-size="large">Visualise these colors</button>
       </div>
       <div class="stage-wrap">
         <svg id="stage" viewBox="0 0 1000 700" role="img" aria-label="3D color palette visualization"></svg>
         <div class="empty" id="emptyState">
-          <div class="empty-card">
+          <div class="empty-card" data-ba-component="Surface" data-ba-surface="default">
             <div class="mark"></div>
             <h2>No color palette in the system</h2>
             <p>Start with a PDF or CSV. Color codes are extracted locally in your browser, then you can clean up names, groups, and values before drawing the color-space diagram.</p>
-            <div class="btnrow"><button class="ds-button" data-size="large" data-type="primary" data-fill="on" data-icon="upload-simple" id="emptyUploadBtn">Upload PDF or CSV</button></div>
+            <div class="btnrow"><button class="ds-button" data-size="large" data-type="primary" data-fill="on" data-icon="upload-simple" id="emptyUploadBtn" data-ba-component="Button" data-ba-variant="filled" data-ba-tone="primary" data-ba-size="large">Upload PDF or CSV</button></div>
           </div>
         </div>
         <div class="legend" id="legend"></div>
       </div>
     </main>
-    <aside class="right">
+    <aside class="right" data-ba-component="Sidebar">
       <div class="grp"><h3>Selection</h3><div class="grpbody"><strong id="hoverName">Hover a color point</strong><p class="hint" id="hoverMeta">Color metadata will appear here after a palette is visualized.</p></div></div>
       <div class="grp"><h3>Palette Stats</h3><div class="grpbody"><div class="metric"><span>Colors</span><b id="countMetric">0</b></div><div class="metric"><span>Groups</span><b id="groupMetric">0</b></div><div class="metric"><span>Source</span><b id="sourceMetric">None</b></div></div></div>
       <div class="grp"><h3>Distance Plan</h3><div class="grpbody"><p class="hint" id="distanceMeta">Click a color point to pin it and compare visible distances.</p><div class="palette-list" id="distanceList"></div></div></div>
@@ -56,9 +54,9 @@
   </div>
 </div>
 
-<dialog class="modal" id="paletteModal">
+<dialog class="modal" id="paletteModal" data-ba-component="Surface" data-ba-surface="default">
   <form method="dialog">
-    <div class="modal-head"><div><h2>Upload and edit palette</h2><p>Everything runs in your browser. CSV is parsed directly and PDF text is extracted locally with PDF.js.</p></div><div class="spacer"></div><div class="modal-top-actions"><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="upload-simple" id="modalUploadBtn" type="button">Upload file</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="plus" id="addColorBtn" type="button">Add color</button><button class="ds-button" data-size="small" data-type="primary" data-fill="on" data-icon="sparkle" id="applyBtn" type="button" disabled>Visualise</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="x" type="button" id="closeModalBtn">Close</button></div></div>
+    <div class="modal-head"><div><h2>Upload and edit palette</h2><p>Everything runs in your browser. CSV is parsed directly and PDF text is extracted locally with PDF.js.</p></div><div class="spacer"></div><div class="modal-top-actions"><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="upload-simple" id="modalUploadBtn" type="button" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">Upload file</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="plus" id="addColorBtn" type="button" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">Add color</button><button class="ds-button" data-size="small" data-type="primary" data-fill="on" data-icon="sparkle" id="applyBtn" type="button" disabled="" data-ba-component="Button" data-ba-variant="filled" data-ba-tone="primary" data-ba-size="small">Visualise</button><button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="x" type="button" id="closeModalBtn" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">Close</button></div></div>
     <div class="modal-body">
       <label class="drop" id="dropZone"><input id="fileInput" type="file" accept=".csv,.pdf,text/csv,application/pdf"><span class="drop-mark" data-icon-host="upload-simple"></span><span><strong>Upload PDF or CSV</strong><span class="hint">Drop a file here or click to choose. Expected fields can be hex, color, colour, code, name, group, brand, palette, or layer.</span></span></label>
       <div class="loading" id="loading"><span class="spinner"></span><div><strong>Creating color palette</strong><div class="hint">Extracting values in your browser and preparing editable swatches.</div></div></div>
@@ -174,5 +172,7 @@ svg.addEventListener("wheel",e=>{e.preventDefault();zoom=Math.max(.62,Math.min(1
 syncAngles();updateChrome();
 hydrateIcons();
 </script>
-</body>
-</html>
+
+
+<script type="module" src="https://cdn.jsdelivr.net/gh/shubhamarya-uxnai/BA-Design-Sytem@v0.2.0/dist/adopt.mjs"></script>
+</body></html>
