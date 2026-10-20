@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Color Palette Visualizer V1</title>
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/shubhamarya-uxnai/BA-Design-Sytem@v0.2.0/dist/consumer.css" data-ba-version="0.2.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/shubhamarya-uxnai/BA-Design-Sytem@v0.2.1/dist/consumer.css" data-ba-version="0.2.1">
 <link rel="stylesheet" href="type.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Material+Symbols+Rounded&amp;display=swap">
 </head>
@@ -14,7 +14,7 @@
     <div class="spacer"></div>
     <div class="status" id="status">No palette loaded</div>
     <button class="ds-button" data-size="small" data-type="neutral" data-fill="off" data-icon="palette" id="editBtn" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">Upload / Edit</button>
-  </header>
+  <div data-ba-settings></div></header>
   <div class="shell">
     <aside class="left" data-ba-component="Sidebar">
       <div class="grp"><h3>Color Space</h3><div class="grpbody"><div class="segmented" role="group" aria-label="Color space"><button data-mode="rgb" aria-pressed="true" data-ba-component="Button" data-ba-variant="filled" data-ba-tone="primary" data-ba-size="small">RGB</button><button data-mode="hsl" aria-pressed="false" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">HSL</button><button data-mode="hct" aria-pressed="false" data-ba-component="Button" data-ba-variant="ghost" data-ba-tone="neutral" data-ba-size="small">HCT</button></div><p class="hint">The diagram keeps the earlier RGB, HSL, and HCT-oriented plotting model.</p></div></div>
@@ -174,5 +174,6 @@ hydrateIcons();
 </script>
 
 
-<script type="module" src="https://cdn.jsdelivr.net/gh/shubhamarya-uxnai/BA-Design-Sytem@v0.2.0/dist/adopt.mjs"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/shubhamarya-uxnai/BA-Design-Sytem@v0.2.1/dist/adopt.mjs"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/shubhamarya-uxnai/BA-Design-Sytem@v0.2.1/dist/settings.mjs"></script>
 </body></html>
