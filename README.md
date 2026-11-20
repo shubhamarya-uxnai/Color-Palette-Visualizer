@@ -1,4 +1,4 @@
-# Palette Visualizer v1.1.0
+# Palette Visualizer v1.2.0
 
 React rebuild of the browser-based palette visualizer. CSV and selectable-text PDF files are parsed locally in the browser; uploads are not sent to an application server. RGB and HSL plots remain available, and the HCT plot now uses actual Material Color Utilities hue, chroma, and tone values.
 
